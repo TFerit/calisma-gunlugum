@@ -1,0 +1,22 @@
+ÇALIŞMA GÜNLÜĞÜM — PWA DOSYALARI
+
+Bu klasör, mevcut HTML uygulamasının PWA sürümüdür.
+
+İçerik:
+- index.html: uygulama
+- manifest.webmanifest: ana ekran adı, simge ve görüntüleme ayarları
+- sw.js: uygulama kabuğunu çevrimdışı önbelleğe alan service worker
+- icons/: 192x192 ve 512x512 uygulama simgeleri
+
+KURULUM:
+1. Bu klasörün tüm içeriğini HTTPS destekleyen bir statik web barındırma hizmetine yükleyin.
+2. Site adresini Android telefonda Chrome ile açın.
+3. Chrome menüsünden "Uygulamayı yükle" veya "Ana ekrana ekle" seçeneğine dokunun.
+4. Yükleme tamamlandıktan sonra uygulama simgesinden açın.
+5. İlk açılışta uygulamanın çevrimdışı dosyaları önbelleğe alması için internet bağlantısı açık olsun.
+
+ÖNEMLİ:
+- PWA'nın kurulabilmesi ve çevrimdışı önbelleği için HTTPS gerekir (localhost istisnası masaüstü geliştirme içindir).
+- Veriler tarayıcının bu siteye ait yerel depolamasında kalır. Tarayıcı/site verilerini silmek verileri silebilir.
+- Alarm özelliği, uygulamanın tarayıcıda açık kalmasını gerektirebilir; Android arka planında yerel alarm garantisi vermez.
+- Bu paket APK değildir; tarayıcı üzerinden yüklenen bir PWA'dır.
