@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#172b38">
+  <meta name="description" content="YKS 2027 çalışma ve deneme takip günlüğü.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>Çalışma Günlüğüm</title>
+<style>
+:root{--bg:#f4f6f5;--panel:#fff;--ink:#1c2b32;--muted:#718087;--line:#e5ebea;--accent:#477c70;--accent2:#dcebe5;--navy:#172b38;--danger:#b65d58;--shadow:0 8px 28px rgba(25,48,55,.055)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;padding-bottom:88px}
+button,input,select{font:inherit}button{cursor:pointer}
+header{background:var(--navy);color:#fff;padding:24px 18px 22px;border-radius:0 0 26px 26px}
+.topline{display:flex;justify-content:space-between;align-items:center;max-width:760px;margin:auto}.brand{font-size:20px;font-weight:750;letter-spacing:-.5px}.brand small{display:block;color:#b6ccc6;font-size:10px;letter-spacing:2px;font-weight:650;margin-top:4px}
+.today{font-size:12px;color:#c4d4d1}
+.countbox{max-width:760px;margin:24px auto 0;background:#294451;border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:17px 18px;display:flex;justify-content:space-between;align-items:center}
+.countbox .num{font-size:36px;font-weight:800;letter-spacing:-1.5px;line-height:1.1}.countbox .label{font-size:11px;color:#c5d6d1;margin-top:6px}.countbox .date{font-size:12px;color:#d7e5e1;text-align:right}
+main{max-width:760px;margin:18px auto;padding:0 14px}.view{display:none}.view.active{display:block}
+.section-title{font-size:18px;font-weight:750;letter-spacing:-.4px;margin:22px 2px 12px}.muted{color:var(--muted)}.small{font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:15px;box-shadow:var(--shadow)}
+.stat-label{font-size:11px;color:var(--muted);font-weight:650}.stat-value{font-size:25px;font-weight:800;margin-top:7px;letter-spacing:-.7px}.stat-sub{font-size:11px;color:var(--muted);margin-top:3px}
+.actions{display:flex;gap:9px;flex-wrap:wrap}.btn{border:0;border-radius:12px;padding:12px 15px;background:var(--accent);color:#fff;font-weight:700;font-size:13px}.btn.secondary{background:var(--accent2);color:#315c51}.btn.ghost{background:#f1f4f3;color:#405159}.btn.danger{background:#f8e9e7;color:var(--danger)}.btn.full{width:100%}
+.quick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}.quick button{border:1px solid var(--line);background:#fff;text-align:left;padding:15px;border-radius:15px;color:var(--ink);box-shadow:var(--shadow)}.quick b{display:block;margin-top:8px;font-size:13px}.quick span{font-size:11px;color:var(--muted)}
+.bottomnav{position:fixed;z-index:10;bottom:0;left:0;right:0;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);display:flex;justify-content:center;padding:8px 4px max(8px,env(safe-area-inset-bottom))}
+.bottomnav button{flex:1;max-width:150px;border:0;background:transparent;color:#829097;font-size:10px;padding:6px 2px;border-radius:10px;font-weight:650}.bottomnav button .ico{display:block;font-size:19px;margin-bottom:3px}.bottomnav button.active{color:var(--accent);background:#edf4f1}
+.formrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{margin:10px 0}.field label{display:block;font-size:11px;color:var(--muted);font-weight:700;margin:0 0 6px}.field input,.field select{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px 12px;background:#fbfcfc;color:var(--ink);outline:none}.field input:focus,.field select:focus{border-color:#8db6a9}
+.subject{border:1px solid var(--line);border-radius:14px;padding:12px;margin:9px 0;background:#fff}.subjecthead{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;font-size:13px;font-weight:750}.qcount{font-size:10px;color:var(--muted);font-weight:600}.triple{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.triple label{font-size:10px;color:var(--muted);display:block;margin-bottom:4px}.triple input{width:100%;min-width:0;border:1px solid var(--line);border-radius:9px;padding:9px 5px;text-align:center;background:#f9fbfa}
+.totalbar{display:flex;justify-content:space-between;align-items:center;background:#edf4f1;border-radius:12px;padding:12px 13px;margin:12px 0;font-weight:750}.totalbar strong{font-size:20px;color:#315f53}
+.examitem{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}.examitem:last-child{border-bottom:0}.examname{font-size:13px;font-weight:750}.exammeta{font-size:11px;color:var(--muted);margin-top:4px}.examnet{text-align:right;font-size:18px;font-weight:800}.examnet small{display:block;font-size:10px;color:var(--muted);font-weight:600}
+.tabs{display:flex;gap:7px;background:#e9efed;padding:4px;border-radius:12px;margin-bottom:13px}.tabs button{flex:1;border:0;background:transparent;border-radius:9px;padding:9px 5px;color:var(--muted);font-size:12px;font-weight:700}.tabs button.active{background:#fff;color:var(--accent);box-shadow:0 2px 7px #172b3810}
+.chartwrap{height:250px;position:relative}.chartwrap canvas{width:100%;height:100%}.chart-note{font-size:11px;color:var(--muted);margin-top:7px}
+.timer{text-align:center;padding:24px 12px}.timerdisplay{font-size:48px;font-weight:800;letter-spacing:-2px;font-variant-numeric:tabular-nums;margin:15px 0}.timerbuttons{display:flex;justify-content:center;gap:9px}
+.dayrow{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}.dayrow:last-child{border:0}
+.empty{text-align:center;padding:27px 12px;color:var(--muted);font-size:12px}
+.alarmrow{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);gap:10px}.alarmrow:last-child{border:0}
+.switch{accent-color:var(--accent);width:18px;height:18px}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#233b45;color:white;padding:11px 16px;border-radius:12px;font-size:12px;opacity:0;pointer-events:none;transition:.2s;z-index:30;max-width:90%;text-align:center}.toast.show{opacity:1}
+dialog{border:0;border-radius:20px;padding:20px;width:min(92vw,440px);box-shadow:0 20px 80px #0003;color:var(--ink)}dialog::backdrop{background:#13232c88}.dialogactions{display:flex;gap:8px;margin-top:16px}.dialogactions button{flex:1}
+@media(min-width:600px){header{padding-left:28px;padding-right:28px}.countbox{padding:22px 24px}.countbox .num{font-size:43px}main{padding:0 22px}.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<header>
+ <div class="topline"><div class="brand">Çalışma Günlüğüm<small>2027 YKS YOLCULUĞU</small></div><div class="today" id="todayLabel"></div></div>
+ <div class="countbox"><div><div class="num" id="daysLeft">—</div><div class="label">19 Haziran 2027'ye kalan gün</div></div><div class="date">HEDEF TARİH<br><b>19.06.2027</b></div></div>
+</header>
+<main>
+<section class="view active" id="home">
+ <div class="section-title">Genel görünüm</div>
+ <div class="grid">
+  <div class="card"><div class="stat-label">TYT SON DENEME</div><div class="stat-value" id="homeTyt">—</div><div class="stat-sub" id="homeTytDate">Henüz deneme yok</div></div>
+  <div class="card"><div class="stat-label">AYT SON DENEME</div><div class="stat-value" id="homeAyt">—</div><div class="stat-sub" id="homeAytDate">Henüz deneme yok</div></div>
+  <div class="card"><div class="stat-label">BUGÜN ÇALIŞMA</div><div class="stat-value" id="homeStudy">0 sa</div><div class="stat-sub">Manuel kaydedilen süre</div></div>
+  <div class="card"><div class="stat-label">TOPLAM DENEME</div><div class="stat-value" id="homeCount">0</div><div class="stat-sub">Kaydedilen tüm denemeler</div></div>
+ </div>
+ <div class="section-title">Hızlı erişim</div>
+ <div class="quick">
+  <button onclick="openExam()"><span>✎ Deneme sonuçlarını kaydet</span><b>Yeni deneme ekle →</b></button>
+  <button onclick="showView('analysis')"><span>↗ Gelişimini incele</span><b>Deneme analizi →</b></button>
+  <button onclick="showView('study')"><span>◷ Çalışma süreni kaydet</span><b>Çalışma günlüğü →</b></button>
+  <button onclick="showView('tools')"><span>◉ Zamanını yönet</span><b>Kronometre ve alarm →</b></button>
+ </div>
+ <div class="section-title">Son denemeler</div><div class="card" id="homeRecent"><div class="empty">Henüz deneme eklemedin.</div></div>
+</section>
+
+<section class="view" id="exams">
+ <div class="section-title">Deneme takibi</div>
+ <button class="btn full" onclick="openExam()">＋ Yeni deneme ekle</button>
+ <div class="card" style="margin-top:13px" id="examList"><div class="empty">Henüz deneme kaydı yok.</div></div>
+</section>
+
+<section class="view" id="analysis">
+ <div class="section-title">Deneme analizi</div>
+ <div class="tabs"><button class="active" id="tabTyt" onclick="setChartType('TYT')">TYT</button><button id="tabAyt" onclick="setChartType('AYT')">AYT</button></div>
+ <div class="card">
+  <div class="stat-label" id="chartTitle">TYT NET GELİŞİMİ</div>
+  <div class="stat-value" id="chartLatest">—</div>
+  <div class="stat-sub" id="chartSub">Tüm denemeler</div>
+  <div class="chartwrap"><canvas id="mainChart"></canvas></div>
+  <div class="chart-note">Her nokta bir denemeyi temsil eder. Denemeler tarihe göre sıralanır.</div>
+ </div>
+ <div class="section-title">Ders bazında gelişim</div>
+ <div class="card">
+  <div class="field"><label>GRAFİĞİNİ GÖRMEK İSTEDİĞİN DERS</label><select id="subjectSelect" onchange="drawSubjectChart()"></select></div>
+  <div class="stat-value" id="subjectLatest">—</div><div class="stat-sub" id="subjectSub">Seçilen dersin deneme geçmişi</div>
+  <div class="chartwrap"><canvas id="subjectChart"></canvas></div>
+ </div>
+ <div class="section-title">Son denemenin ders dağılımı</div><div class="card" id="analysisBreakdown"><div class="empty">Analiz için deneme ekle.</div></div>
+</section>
+
+<section class="view" id="study">
+ <div class="section-title">Çalışma günlüğü</div>
+ <div class="card">
+  <div class="formrow">
+   <div class="field"><label>TARİH</label><input type="date" id="studyDate"></div>
+   <div class="field"><label>SÜRE (SAAT)</label><input type="number" id="studyHours" min="0" max="24" step=".25" placeholder="Örn. 5.5"></div>
+  </div>
+  <button class="btn full" onclick="saveStudy()">Çalışma süresini kaydet</button>
+  <div class="small muted" style="margin-top:8px">Süreyi kendin girebilirsin. Kronometre bu kayda otomatik ekleme yapmaz.</div>
+ </div>
+ <div class="section-title">Son 7 gün</div><div class="card" id="weekStudy"></div>
+ <div class="section-title">Geçmiş kayıtlar</div><div class="card" id="studyHistory"></div>
+</section>
+
+<section class="view" id="tools">
+ <div class="section-title">Kronometre</div>
+ <div class="card timer">
+  <div class="stat-label">SERBEST ÇALIŞMA SÜRESİ</div><div class="timerdisplay" id="timerDisplay">00:00:00</div>
+  <div class="timerbuttons"><button class="btn" id="timerStart" onclick="startTimer()">Başlat</button><button class="btn secondary" onclick="pauseTimer()">Duraklat</button><button class="btn ghost" onclick="resetTimer()">Sıfırla</button></div>
+  <div class="small muted" style="margin-top:13px">Kronometre süresi günlük çalışma kaydına otomatik aktarılmaz.</div>
+ </div>
+ <div class="section-title">Alarmlar</div>
+ <div class="card">
+  <div class="formrow"><div class="field"><label>SAAT</label><input type="time" id="alarmTime"></div><div class="field"><label>ALARM ADI</label><input id="alarmName" maxlength="35" placeholder="Örn. Matematik"></div></div>
+  <button class="btn full" onclick="addAlarm()">＋ Alarm oluştur</button>
+  <p class="small muted">Bildirim izni gerekir. Alarmın zamanında çalması için uygulama tarayıcıda açık kalmalıdır.</p>
+  <div id="alarmList"></div>
+ </div>
+</section>
+</main>
+
+<nav class="bottomnav">
+ <button class="active" data-view="home" onclick="showView('home')"><span class="ico">⌂</span>Ana Sayfa</button>
+ <button data-view="exams" onclick="showView('exams')"><span class="ico">▤</span>Denemeler</button>
+ <button data-view="analysis" onclick="showView('analysis')"><span class="ico">⌁</span>Analiz</button>
+ <button data-view="study" onclick="showView('study')"><span class="ico">◷</span>Çalışma</button>
+ <button data-view="tools" onclick="showView('tools')"><span class="ico">⏱</span>Araçlar</button>
+</nav>
+<div class="toast" id="toast"></div>
+
+<dialog id="examDialog">
+ <h3 id="dialogTitle" style="margin:0 0 4px">Yeni deneme</h3><div class="small muted">Deneme bilgilerini ve sonuçlarını gir.</div>
+ <div class="formrow">
+  <div class="field"><label>SINAV TÜRÜ</label><select id="examType" onchange="renderSubjectInputs()"><option value="TYT">TYT</option><option value="AYT">AYT</option></select></div>
+  <div class="field"><label>DENEME TARİHİ</label><input type="date" id="examDate"></div>
+ </div>
+ <div class="field"><label>DENEME ADI</label><input id="examName" maxlength="70" placeholder="Örn. 3D TYT Türkiye Geneli 1"></div>
+ <div id="subjectInputs"></div>
+ <div class="totalbar"><span>Toplam net</span><strong id="examTotal">0,00</strong></div>
+ <div class="dialogactions"><button class="btn ghost" onclick="closeExam()">Vazgeç</button><button class="btn" onclick="saveExam()">Kaydet</button></div>
+</dialog>
+
+<script>
+const KEY='calismaGunlugum_v1';
+const TYT=[
+ {key:'turkce',name:'Türkçe',q:40},{key:'matematik',name:'Matematik',q:40},
+ {key:'tarih',name:'Tarih',q:5},{key:'cografya',name:'Coğrafya',q:5},{key:'felsefe',name:'Felsefe',q:5},{key:'din',name:'Din',q:5},
+ {key:'fizik',name:'Fizik',q:7},{key:'kimya',name:'Kimya',q:7},{key:'biyoloji',name:'Biyoloji',q:6}
+];
+const AYT=[{key:'matematik',name:'Matematik',q:40},{key:'fizik',name:'Fizik',q:14},{key:'kimya',name:'Kimya',q:13},{key:'biyoloji',name:'Biyoloji',q:13}];
+const $=id=>document.getElementById(id);
+let data=loadData(), editingId=null, chartType='TYT', timerSeconds=0,timerStartAt=null,timerInterval=null,alarmInterval=null,alarmLast={};
+function loadData(){try{return JSON.parse(localStorage.getItem(KEY))||{exams:[],study:{},alarms:[]}}catch(e){return {exams:[],study:{},alarms:[]}}}
+function persist(){localStorage.setItem(KEY,JSON.stringify(data));}
+function today(){let d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function fmtDate(s){if(!s)return '';let [y,m,d]=s.split('-');return `${d}.${m}.${y}`}
+function fmt(n){return Number(n||0).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function net(x){return (Number(x.d)||0)-(Number(x.w)||0)/4}
+function subjects(type){return type==='TYT'?TYT:AYT}
+function totalNet(e){return Object.values(e.results).reduce((s,x)=>s+net(x),0)}
+function aggregate(e,keys){return keys.reduce((s,k)=>s+(e.results[k]?net(e.results[k]):0),0)}
+function toast(msg){let t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2300)}
+function showView(v){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===v));document.querySelectorAll('.bottomnav button').forEach(x=>x.classList.toggle('active',x.dataset.view===v));if(v==='analysis')renderAnalysis();if(v==='study')renderStudy();if(v==='tools')renderAlarms();if(v==='exams')renderExams();if(v==='home')renderHome()}
+function openExam(id=null){editingId=id;let e=id?data.exams.find(x=>x.id===id):null;$('dialogTitle').textContent=e?'Düzenle':'Yeni deneme';$('examType').value=e?.type||'TYT';$('examDate').value=e?.date||today();$('examName').value=e?.name||'';renderSubjectInputs(e?.results||{});$('examDialog').showModal()}
+function closeExam(){$('examDialog').close()}
+function renderSubjectInputs(results={}){let type=$('examType').value;let arr=subjects(type);$('subjectInputs').innerHTML=arr.map(s=>{let x=results[s.key]||{d:0,w:0,b:0};return `<div class="subject"><div class="subjecthead"><span>${s.name}</span><span class="qcount">${s.q} soru</span></div><div class="triple">${[['d','Doğru'],['w','Yanlış'],['b','Boş']].map(([k,l])=>`<div><label>${l}</label><input type="number" min="0" max="${s.q}" step="1" inputmode="numeric" data-key="${s.key}" data-field="${k}" value="${x[k]||0}" oninput="updateExamTotal()"></div>`).join('')}</div></div>`}).join('');updateExamTotal()}
+function readExamResults(){let r={};document.querySelectorAll('#subjectInputs input').forEach(i=>{let k=i.dataset.key,f=i.dataset.field;r[k]??={d:0,w:0,b:0};r[k][f]=Number(i.value||0)});return r}
+function updateExamTotal(){let r=readExamResults(),sum=Object.values(r).reduce((a,x)=>a+net(x),0);$('examTotal').textContent=fmt(sum);let invalid=false;subjects($('examType').value).forEach(s=>{let x=r[s.key];if(x.d+x.w+x.b>s.q||x.d+x.w+x.b<0||[x.d,x.w,x.b].some(v=>v<0||!Number.isInteger(v)))invalid=true});$('examTotal').style.color=invalid?'#b65d58':'#315f53'}
+function saveExam(){let type=$('examType').value,date=$('examDate').value,name=$('examName').value.trim()||`${type} Denemesi`,results=readExamResults();if(!date){toast('Lütfen deneme tarihini seç.');return}for(let s of subjects(type)){let x=results[s.key];if([x.d,x.w,x.b].some(v=>!Number.isInteger(v)||v<0)||x.d+x.w+x.b>s.q){toast(`${s.name}: En fazla ${s.q} soru girebilirsin.`);return}}
+ let obj={id:editingId||String(Date.now()),type,date,name,results};if(editingId)data.exams=data.exams.map(x=>x.id===editingId?obj:x);else data.exams.push(obj);persist();closeExam();renderAll();toast('Deneme kaydedildi.')}
+function deleteExam(id){if(!confirm('Bu denemeyi silmek istiyor musun?'))return;data.exams=data.exams.filter(x=>x.id!==id);persist();renderAll();toast('Deneme silindi.')}
+function examHTML(e){return `<div class="examitem"><div style="min-width:0"><div class="examname">${escapeHtml(e.name)}</div><div class="exammeta">${e.type} · ${fmtDate(e.date)}</div><div class="exammeta">D ${Object.values(e.results).reduce((s,x)=>s+x.d,0)} · Y ${Object.values(e.results).reduce((s,x)=>s+x.w,0)} · B ${Object.values(e.results).reduce((s,x)=>s+x.b,0)}</div></div><div><div class="examnet">${fmt(totalNet(e))}<small>NET</small></div><div style="display:flex;gap:5px;margin-top:7px"><button class="btn ghost" style="padding:6px 8px;font-size:10px" onclick="openExam('${e.id}')">Düzenle</button><button class="btn danger" style="padding:6px 8px;font-size:10px" onclick="deleteExam('${e.id}')">Sil</button></div></div></div>`}
+function renderExams(){let arr=[...data.exams].sort((a,b)=>b.date.localeCompare(a.date));$('examList').innerHTML=arr.length?arr.map(examHTML).join(''):'<div class="empty">Henüz deneme kaydı yok.</div>'}
+function renderHome(){let t=data.exams.filter(x=>x.type==='TYT').sort((a,b)=>b.date.localeCompare(a.date))[0],a=data.exams.filter(x=>x.type==='AYT').sort((a,b)=>b.date.localeCompare(a.date))[0];$('homeTyt').textContent=t?fmt(totalNet(t)):'—';$('homeAyt').textContent=a?fmt(totalNet(a)):'—';$('homeTytDate').textContent=t?fmtDate(t.date):'Henüz deneme yok';$('homeAytDate').textContent=a?fmtDate(a.date):'Henüz deneme yok';$('homeCount').textContent=data.exams.length;$('homeStudy').textContent=(data.study[today()]||0)+' sa';let arr=[...data.exams].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,4);$('homeRecent').innerHTML=arr.length?arr.map(examHTML).join(''):'<div class="empty">Henüz deneme eklemedin.</div>'}
+function setChartType(t){chartType=t;$('tabTyt').classList.toggle('active',t==='TYT');$('tabAyt').classList.toggle('active',t==='AYT');renderAnalysis()}
+function renderAnalysis(){let arr=data.exams.filter(e=>e.type===chartType).sort((a,b)=>a.date.localeCompare(b.date));$('chartTitle').textContent=chartType+' NET GELİŞİMİ';$('chartLatest').textContent=arr.length?fmt(totalNet(arr[arr.length-1])):'—';$('chartSub').textContent=arr.length?`${arr.length} deneme · Son deneme ${fmtDate(arr[arr.length-1].date)}`:'Henüz deneme eklenmedi';drawChart($('mainChart'),arr.map(e=>({date:e.date,value:totalNet(e)})));let opts=chartType==='TYT'?[['Genel toplam','__total'],...TYT.map(s=>[s.name,s.key]),['Sosyal toplam','__social'],['Fen toplam','__science']]:[['Genel toplam','__total'],...AYT.map(s=>[s.name,s.key]),['Fen toplam','__science']];$('subjectSelect').innerHTML=opts.map(([n,k])=>`<option value="${k}">${n}</option>`).join('');drawSubjectChart();let latest=arr[arr.length-1];$('analysisBreakdown').innerHTML=latest?subjects(chartType).map(s=>`<div class="dayrow"><span>${s.name}</span><b>${fmt(net(latest.results[s.key]))} net</b></div>`).join(''):'<div class="empty">Analiz için deneme ekle.</div>'}
+function subjectValue(e,key){if(key==='__total')return totalNet(e);if(key==='__social')return aggregate(e,['tarih','cografya','felsefe','din']);if(key==='__science')return chartType==='TYT'?aggregate(e,['fizik','kimya','biyoloji']):aggregate(e,['fizik','kimya','biyoloji']);return e.results[key]?net(e.results[key]):0}
+function drawSubjectChart(){let key=$('subjectSelect').value||'__total',arr=data.exams.filter(e=>e.type===chartType).sort((a,b)=>a.date.localeCompare(b.date)),name=$('subjectSelect').selectedOptions[0]?.textContent||'Genel toplam';let vals=arr.map(e=>({date:e.date,value:subjectValue(e,key)}));$('subjectLatest').textContent=vals.length?fmt(vals[vals.length-1].value):'—';$('subjectSub').textContent=vals.length?`${name} · ${vals.length} deneme`:'Henüz veri yok';drawChart($('subjectChart'),vals)}
+function drawChart(canvas,points){let rect=canvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1,w=Math.max(280,rect.width),h=Math.max(200,rect.height);canvas.width=w*dpr;canvas.height=h*dpr;let c=canvas.getContext('2d');c.scale(dpr,dpr);c.clearRect(0,0,w,h);let left=38,right=12,top=14,bottom=30,pw=w-left-right,ph=h-top-bottom;c.font='10px system-ui';c.fillStyle='#829097';if(!points.length){c.textAlign='center';c.fillText('Grafik için deneme verisi ekle',w/2,h/2);return}let max=Math.max(10,...points.map(p=>p.value));max=Math.ceil(max/10)*10;for(let i=0;i<=4;i++){let y=top+ph-i*ph/4;c.strokeStyle='#e8eeec';c.beginPath();c.moveTo(left,y);c.lineTo(w-right,y);c.stroke();c.textAlign='right';c.fillText((max*i/4).toFixed(0),left-7,y+3)}let xy=points.map((p,i)=>({x:points.length===1?left+pw/2:left+i*pw/(points.length-1),y:top+ph-(p.value/max)*ph,p}));if(points.length>1){c.beginPath();xy.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));c.strokeStyle='#477c70';c.lineWidth=2.5;c.stroke()}xy.forEach((p,i)=>{c.beginPath();c.arc(p.x,p.y,4,0,Math.PI*2);c.fillStyle='#477c70';c.fill();if(points.length<=9||i===0||i===points.length-1){c.fillStyle='#718087';c.textAlign='center';c.fillText(p.p.date.slice(5).split('-').reverse().join('/'),p.x,h-9)}})}
+function saveStudy(){let date=$('studyDate').value,h=Number($('studyHours').value);if(!date||!Number.isFinite(h)||h<0||h>24){toast('Geçerli tarih ve 0–24 saat arasında süre gir.');return}data.study[date]=Math.round(h*100)/100;persist();$('studyHours').value='';renderStudy();renderHome();toast('Çalışma süresi kaydedildi.')}
+function renderStudy(){let keys=Object.keys(data.study).sort().reverse(),last7=[];for(let i=6;i>=0;i--){let d=new Date();d.setDate(d.getDate()-i);let k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');last7.push([k,data.study[k]||0])}$('weekStudy').innerHTML=last7.map(([d,h])=>`<div class="dayrow"><span>${fmtDate(d)}</span><b>${h} saat</b></div>`).join('')+`<div class="totalbar"><span>Son 7 gün toplamı</span><strong>${fmt(last7.reduce((s,x)=>s+x[1],0))} sa</strong></div>`;$('studyHistory').innerHTML=keys.length?keys.map(d=>`<div class="dayrow"><span>${fmtDate(d)}</span><div style="display:flex;align-items:center;gap:10px"><b>${data.study[d]} saat</b><button class="btn danger" style="padding:6px 9px;font-size:10px" onclick="deleteStudy('${d}')">Sil</button></div></div>`).join(''):'<div class="empty">Henüz çalışma kaydı yok.</div>'}
+function deleteStudy(d){delete data.study[d];persist();renderStudy();renderHome()}
+function startTimer(){if(timerInterval)return;timerStartAt=Date.now()-timerSeconds*1000;timerInterval=setInterval(()=>{timerSeconds=Math.floor((Date.now()-timerStartAt)/1000);updateTimer()},250);$('timerStart').textContent='Devam ediyor'}
+function pauseTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null;timerSeconds=Math.floor((Date.now()-timerStartAt)/1000)}$('timerStart').textContent='Devam et';updateTimer()}
+function resetTimer(){pauseTimer();timerSeconds=0;$('timerStart').textContent='Başlat';updateTimer()}
+function updateTimer(){let s=timerSeconds,h=Math.floor(s/3600),m=Math.floor(s%3600/60),sec=s%60;$('timerDisplay').textContent=[h,m,sec].map(x=>String(x).padStart(2,'0')).join(':')}
+async function addAlarm(){let time=$('alarmTime').value,name=$('alarmName').value.trim()||'Çalışma alarmı';if(!time){toast('Alarm saati seç.');return}if('Notification'in window&&Notification.permission==='default'){try{await Notification.requestPermission()}catch(e){}}data.alarms.push({id:String(Date.now()),time,name,enabled:true});persist();$('alarmName').value='';renderAlarms();toast('Alarm oluşturuldu.')}
+function renderAlarms(){$('alarmList').innerHTML=data.alarms.length?data.alarms.sort((a,b)=>a.time.localeCompare(b.time)).map(a=>`<div class="alarmrow"><div><b>${escapeHtml(a.time)}</b><div class="small muted">${escapeHtml(a.name)}</div></div><div style="display:flex;align-items:center;gap:9px"><input class="switch" type="checkbox" ${a.enabled?'checked':''} onchange="toggleAlarm('${a.id}',this.checked)"><button class="btn danger" style="padding:7px 9px;font-size:10px" onclick="deleteAlarm('${a.id}')">Sil</button></div></div>`).join(''):'<div class="empty">Henüz alarm oluşturmadın.</div>'}
+function toggleAlarm(id,v){let a=data.alarms.find(x=>x.id===id);if(a)a.enabled=v;persist()}
+function deleteAlarm(id){data.alarms=data.alarms.filter(x=>x.id!==id);persist();renderAlarms()}
+function checkAlarms(){let now=new Date(),t=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0'),day=today();data.alarms.filter(a=>a.enabled&&a.time===t&&alarmLast[a.id]!==day+' '+t).forEach(a=>{alarmLast[a.id]=day+' '+t;if('Notification'in window&&Notification.permission==='granted')new Notification(a.name,{body:'Çalışma Günlüğüm alarmı'});else{try{let ctx=new (window.AudioContext||window.webkitAudioContext)(),o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=880;g.gain.value=.15;o.start();setTimeout(()=>{o.stop();ctx.close()},700)}catch(e){}}});}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renderAll(){renderHome();renderExams();renderAnalysis();renderStudy();renderAlarms()}
+function init(){let d=new Date();$('todayLabel').textContent=d.toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'});let target=new Date(2027,5,19);let now=new Date(d.getFullYear(),d.getMonth(),d.getDate());$('daysLeft').textContent=Math.max(0,Math.ceil((target-now)/86400000));$('studyDate').value=today();$('examDate').value=today();renderAll();updateTimer();alarmInterval=setInterval(checkAlarms,10000);window.addEventListener('resize',()=>{if($('analysis').classList.contains('active'))renderAnalysis()})}
+init();
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch((err) => {
+      console.error("Çevrimdışı destek etkinleştirilemedi:", err);
+    });
+  });
+}
+</script>
+
+</body>
+</html>
